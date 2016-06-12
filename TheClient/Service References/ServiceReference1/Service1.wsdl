@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Service1" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsp:Policy wsu:Id="endpoints-wshttp_policy">
+  <wsp:Policy wsu:Id="endpoints-basic_policy">
     <wsp:ExactlyOne>
       <wsp:All>
-        <sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+        <sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
           <wsp:Policy>
-            <sp:ProtectionToken>
+            <sp:InitiatorToken>
               <wsp:Policy>
-                <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
                   <wsp:Policy>
-                    <sp:RequireDerivedKeys />
-                    <sp:RequireThumbprintReference />
                     <sp:WssX509V3Token10 />
                   </wsp:Policy>
                 </sp:X509Token>
               </wsp:Policy>
-            </sp:ProtectionToken>
+            </sp:InitiatorToken>
+            <sp:RecipientToken>
+              <wsp:Policy>
+                <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                  <wsp:Policy>
+                    <sp:WssX509V3Token10 />
+                  </wsp:Policy>
+                </sp:X509Token>
+              </wsp:Policy>
+            </sp:RecipientToken>
             <sp:AlgorithmSuite>
               <wsp:Policy>
                 <sp:Basic256 />
@@ -23,101 +30,54 @@
             </sp:AlgorithmSuite>
             <sp:Layout>
               <wsp:Policy>
-                <sp:Strict />
+                <sp:Lax />
               </wsp:Policy>
             </sp:Layout>
             <sp:IncludeTimestamp />
             <sp:OnlySignEntireHeadersAndBody />
           </wsp:Policy>
-        </sp:SymmetricBinding>
-        <sp:EndorsingSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+        </sp:AsymmetricBinding>
+        <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
           <wsp:Policy>
-            <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
-              <wsp:Policy>
-                <sp:RequireThumbprintReference />
-                <sp:WssX509V3Token10 />
-              </wsp:Policy>
-            </sp:X509Token>
+            <sp:MustSupportRefKeyIdentifier />
+            <sp:MustSupportRefIssuerSerial />
           </wsp:Policy>
-        </sp:EndorsingSupportingTokens>
-        <sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <wsp:Policy>
-            <sp:MustSupportRefThumbprint />
-            <sp:MustSupportRefEncryptedKey />
-            <sp:RequireSignatureConfirmation />
-          </wsp:Policy>
-        </sp:Wss11>
-        <sp:Trust10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <wsp:Policy>
-            <sp:MustSupportIssuedTokens />
-            <sp:RequireClientEntropy />
-            <sp:RequireServerEntropy />
-          </wsp:Policy>
-        </sp:Trust10>
-        <wsaw:UsingAddressing />
+        </sp:Wss10>
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="endpoints-wshttp_GetData_Input_policy">
+  <wsp:Policy wsu:Id="endpoints-basic_GetData_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
           <sp:Body />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
         </sp:SignedParts>
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="endpoints-wshttp_GetData_output_policy">
+  <wsp:Policy wsu:Id="endpoints-basic_GetData_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
           <sp:Body />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
         </sp:SignedParts>
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="endpoints-wshttp_GetDataUsingDataContract_Input_policy">
+  <wsp:Policy wsu:Id="endpoints-basic_GetDataUsingDataContract_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
           <sp:Body />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
         </sp:SignedParts>
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="endpoints-wshttp_GetDataUsingDataContract_output_policy">
+  <wsp:Policy wsu:Id="endpoints-basic_GetDataUsingDataContract_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
           <sp:Body />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
         </sp:SignedParts>
       </wsp:All>
     </wsp:ExactlyOne>
@@ -135,11 +95,8 @@
   <wsdl:message name="IService1_GetData_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetDataResponse" />
   </wsdl:message>
-  <wsdl:message name="IService1_GetDataUsingDataContract_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetDataUsingDataContract" />
-  </wsdl:message>
-  <wsdl:message name="IService1_GetDataUsingDataContract_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetDataUsingDataContractResponse" />
+  <wsdl:message name="CompositeContract">
+    <wsdl:part name="parameters" element="tns:CompositeContract" />
   </wsdl:message>
   <wsdl:portType name="IService1">
     <wsdl:operation name="GetData">
@@ -147,50 +104,39 @@
       <wsdl:output wsaw:Action="http://tempuri.org/IService1/GetDataResponse" message="tns:IService1_GetData_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetDataUsingDataContract">
-      <wsdl:input wsaw:Action="http://tempuri.org/IService1/GetDataUsingDataContract" message="tns:IService1_GetDataUsingDataContract_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IService1/GetDataUsingDataContractResponse" message="tns:IService1_GetDataUsingDataContract_OutputMessage" />
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/GetDataUsingDataContract" name="CompositeContract" message="tns:CompositeContract" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/GetDataUsingDataContractResponse" name="CompositeContract" message="tns:CompositeContract" />
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="endpoints-wshttp" type="tns:IService1">
-    <wsp:PolicyReference URI="#endpoints-wshttp_policy" />
-    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+  <wsdl:binding name="endpoints-basic" type="tns:IService1">
+    <wsp:PolicyReference URI="#endpoints-basic_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="GetData">
-      <soap12:operation soapAction="http://tempuri.org/IService1/GetData" style="document" />
+      <soap:operation soapAction="http://tempuri.org/IService1/GetData" style="document" />
       <wsdl:input>
-        <wsp:PolicyReference URI="#endpoints-wshttp_GetData_Input_policy" />
-        <soap12:body use="literal" />
+        <wsp:PolicyReference URI="#endpoints-basic_GetData_Input_policy" />
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output>
-        <wsp:PolicyReference URI="#endpoints-wshttp_GetData_output_policy" />
-        <soap12:body use="literal" />
+        <wsp:PolicyReference URI="#endpoints-basic_GetData_output_policy" />
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="GetDataUsingDataContract">
-      <soap12:operation soapAction="http://tempuri.org/IService1/GetDataUsingDataContract" style="document" />
-      <wsdl:input>
-        <wsp:PolicyReference URI="#endpoints-wshttp_GetDataUsingDataContract_Input_policy" />
-        <soap12:body use="literal" />
+      <soap:operation soapAction="http://tempuri.org/IService1/GetDataUsingDataContract" style="document" />
+      <wsdl:input name="CompositeContract">
+        <wsp:PolicyReference URI="#endpoints-basic_GetDataUsingDataContract_Input_policy" />
+        <soap:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
-        <wsp:PolicyReference URI="#endpoints-wshttp_GetDataUsingDataContract_output_policy" />
-        <soap12:body use="literal" />
+      <wsdl:output name="CompositeContract">
+        <wsp:PolicyReference URI="#endpoints-basic_GetDataUsingDataContract_output_policy" />
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="Service1">
-    <wsdl:port name="endpoints-wshttp" binding="tns:endpoints-wshttp">
-      <soap12:address location="http://localhost:32766/Service1.svc" />
-      <wsa10:EndpointReference>
-        <wsa10:Address>http://localhost:32766/Service1.svc</wsa10:Address>
-        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
-            <X509Data>
-              <X509Certificate>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</X509Certificate>
-              <X509Certificate>MIIFVTCCAz2gAwIBAgIQROPBNC/ngJNGbgDUYcGlbjANBgkqhkiG9w0BAQsFADA9MRMwEQYKCZImiZPyLGQBGRYDY29tMRQwEgYKCZImiZPyLGQBGRYEaG9tZTEQMA4GA1UEAxMHaG9tZS1DQTAeFw0xNDA1MzExMzQ0MzFaFw0zNDA1MzExMzU0MzBaMD0xEzARBgoJkiaJk/IsZAEZFgNjb20xFDASBgoJkiaJk/IsZAEZFgRob21lMRAwDgYDVQQDEwdob21lLUNBMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA2ktB4kVy7cIDDknj4CYGB2Jeb9x79tOkS1A/v1Ycymzn/zMpz8442LxCm8kqIrfkEvI6tPVXxmXf8skawfzcNTU31Laeo6RdnqvM6XnitdkmmMDu8M+qjNeQmldlgAb+gMAbqd7sCA8sztWBd9kOZV28btSDZr1mw945iKAULXuT8vL8V5CZzpt85tt5hX4GMMmnk0RE8DiW1yiQbL4sF6zyAkDoFdzA4WnCuI9U/27K4M3Wjvs3NAmXF78rNbWP+wBdc8oSkHZy70MCaogMznevRxlRYf9FCeBp+BZW6RaukbMJ/TFsfbqnIH8J8epyoQ/LKgDBhkqHu3bg+lBN3pq2h/dygq1XeT3fKm0zD9oZMfZhwrCt4XXVx/RBM2JvFfZtZpl+/BylhgExha1hERs9Q9dgXFWEkXt8LC9nk+++95C2N+xlCzbJmEi9M26SUA8z/fJPi2Ra7wsBI7U+HJlwB8HNPgpX1rnb+oyQhzgQBKzw/G99j8QDpMxzqlD2mKN3FNAb0VBdgU0uw0jxo0g3yuhWancXkEUS4SDtjwAuR3ptvzFXwGIhOWdKvdrjCNKkPKWYynTikK+G7wnJpTxOzfOjvsecnYx93qNHkyiQ92yVNDqQMXz0aIWa4C1+g75HY0TAiaps8jj2dO8b3AxAPbCmB4IXgZip7q9fQT0CAwEAAaNRME8wCwYDVR0PBAQDAgGGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFPMDBAD7mLg8WBRvrDnEwytLFTfPMBAGCSsGAQQBgjcVAQQDAgEAMA0GCSqGSIb3DQEBCwUAA4ICAQCPOacm1aS2CJl960ZYX7av4EB3bRTq2BdE5OzwnTY/Z9VmsuuELdyt1o5WL29TuTPoTDy85Jh7auTcbgfzjgWh1lHJmRmDyX24qEYT7Nb4/oPAmpEO0UDRgFkdiUtdDtcyE9OwwVFHYqJW69bW8BLZ1OJqVgVJYHLA0kLJjbnyjIRaM5XcPWQ94585PLOxevL8H/KyGAlOP/X1upcbX5IxK0GKb1ntIk2WdN1Tnl67926Yhd7A8mv/S5BPr+QXnnobTaVwcDn8rVuKJRt71khFZgtmwyVu9Bb2OX9j396kCuJhFQznMhKmHYt3EKZ5tecdpH5yrc9uOXjiCsKob78D4px95TJ4aUgCXKGmkGOqQB9ZDK9P5JbQcgsS0oMsQkb3VGz8XmOU83Jqr/jquL6Cjbo4BQKgcPqAcu0AdlFH1VVqBlwudfiv93+3UdVfFXQT6CS4khoCHAtGQ3mA5Rx1k0adWVhKdOZKeQ4oPozo5XVneZKOidHqX23EfOgR78uMXhJEUKaD/Apv7KW0FEPpOuI7UKL5V13srZzOmmZ96W72w6ZUpwq9O71DLVGfOEy38ABosbZdTXHdJLiS1XbAQKz6tKF+zhna/7MJvKjhKf//kX3fnvAmNMy9HdkjgOBIhR7vr1dKEyJ515wgg3hzl1cP3WZ/db6GovvSpIMF6Q==</X509Certificate>
-            </X509Data>
-          </KeyInfo>
-        </Identity>
-      </wsa10:EndpointReference>
+    <wsdl:port name="endpoints-basic" binding="tns:endpoints-basic">
+      <soap:address location="http://localhost:32766/Service1.svc" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

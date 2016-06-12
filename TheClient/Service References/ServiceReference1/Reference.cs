@@ -81,8 +81,26 @@ namespace TheClient.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.Sign, Action="http://tempuri.org/IService1/GetData", ReplyAction="http://tempuri.org/IService1/GetDataResponse")]
         string GetData(int value);
         
+        // CODEGEN: Generating message contract since the wrapper name (CompositeContract) of message CompositeContract does not match the default value (GetDataUsingDataContract)
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.Sign, Action="http://tempuri.org/IService1/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IService1/GetDataUsingDataContractResponse")]
-        TheClient.ServiceReference1.CompositeType GetDataUsingDataContract(TheClient.ServiceReference1.CompositeType composite);
+        TheClient.ServiceReference1.CompositeContract GetDataUsingDataContract(TheClient.ServiceReference1.CompositeContract request);
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="CompositeContract", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class CompositeContract {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public TheClient.ServiceReference1.CompositeType Data;
+        
+        public CompositeContract() {
+        }
+        
+        public CompositeContract(TheClient.ServiceReference1.CompositeType Data) {
+            this.Data = Data;
+        }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -116,8 +134,16 @@ namespace TheClient.ServiceReference1 {
             return base.Channel.GetData(value);
         }
         
-        public TheClient.ServiceReference1.CompositeType GetDataUsingDataContract(TheClient.ServiceReference1.CompositeType composite) {
-            return base.Channel.GetDataUsingDataContract(composite);
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        TheClient.ServiceReference1.CompositeContract TheClient.ServiceReference1.IService1.GetDataUsingDataContract(TheClient.ServiceReference1.CompositeContract request) {
+            return base.Channel.GetDataUsingDataContract(request);
+        }
+        
+        public void GetDataUsingDataContract(ref TheClient.ServiceReference1.CompositeType Data) {
+            TheClient.ServiceReference1.CompositeContract inValue = new TheClient.ServiceReference1.CompositeContract();
+            inValue.Data = Data;
+            TheClient.ServiceReference1.CompositeContract retVal = ((TheClient.ServiceReference1.IService1)(this)).GetDataUsingDataContract(inValue);
+            Data = retVal.Data;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace TheService
         string GetData(int value);
 
         [OperationContract(ProtectionLevel = System.Net.Security.ProtectionLevel.Sign)]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        CompositeContract GetDataUsingDataContract(CompositeContract composite);
     }
 
     [DataContract]
@@ -37,5 +37,12 @@ namespace TheService
             get { return stringValue; }
             set { stringValue = value; }
         }
+    }
+
+    [MessageContract()]
+    public class CompositeContract
+    {
+        [MessageBodyMember()]
+        public CompositeType Data { get; set; }
     }
 }

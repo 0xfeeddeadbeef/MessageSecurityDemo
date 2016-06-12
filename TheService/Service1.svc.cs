@@ -15,16 +15,18 @@ namespace TheService
             return string.Format("You entered: {0}", value);
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public CompositeContract GetDataUsingDataContract(CompositeContract composite)
         {
             if (composite == null)
             {
                 throw new ArgumentNullException("composite");
             }
-            if (composite.BoolValue)
+
+            if (composite.Data.BoolValue)
             {
-                composite.StringValue += "Suffix";
+                composite.Data.StringValue += "Suffix";
             }
+
             return composite;
         }
     }
