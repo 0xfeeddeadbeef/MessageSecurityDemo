@@ -23,6 +23,7 @@ namespace TheService
 
         public object AfterReceiveRequest(ref Message request, IClientChannel channel, InstanceContext instanceContext)
         {
+            /*
             if (!request.IsFault)
             {
                 var quotas = new XmlDictionaryReaderQuotas();
@@ -51,8 +52,40 @@ namespace TheService
                 replacedMessage.Properties.CopyProperties(request.Properties);
                 request = replacedMessage;
             }
+            */
+
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // WARNING: DOES NOT WORK WITH SECURED BINDINGS!!!
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            MessageBuffer buffer = request.CreateBufferedCopy(int.MaxValue);  // cannot create even buffered copy when binding is secured
+            try
+            {
+                Message toBeLogged = buffer.CreateMessage();
+
+                string filePath = GetLogFilePath();
+                using (var fileStream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.Read, 0x2000, FileOptions.SequentialScan))
+                using (var xdw = XmlDictionaryWriter.CreateTextWriter(fileStream, Encoding.UTF8, false))
+                {
+                    toBeLogged.WriteMessage(xdw);
+                    xdw.Flush();
+                }
+
+                request = buffer.CreateMessage();
+            }
+            finally
+            {
+                if (buffer != null)
+                {
+                    buffer.Close();
+                }
+            }
 
             return null;
+        }
+
+        private static string GetLogFilePath()
+        {
+            return System.IO.Path.Combine("Z:\\Logs", "inspector-" + Guid.NewGuid().ToString("N") + ".xml");
         }
 
         public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
