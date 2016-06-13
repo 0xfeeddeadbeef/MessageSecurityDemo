@@ -1,12 +1,13 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
-using System.ServiceModel.Channels;
-using System.ServiceModel.Configuration;
-using System.Xml;
-
-namespace TheService
+﻿namespace TheService
 {
+    using System;
+    using System.Configuration;
+    using System.IO;
+    using System.ServiceModel.Channels;
+    using System.ServiceModel.Configuration;
+    using System.Text;
+    using System.Xml;
+
     public sealed class LoggingMessageEncoder : MessageEncoder
     {
         private readonly MessageEncoder innerEncoder;
@@ -15,7 +16,7 @@ namespace TheService
         {
             if (innerEncoder == null)
             {
-                throw new ArgumentNullException(nameof(innerEncoder));
+                throw new ArgumentNullException("innerEncoder");
             }
 
             this.innerEncoder = innerEncoder;
@@ -120,7 +121,7 @@ namespace TheService
         {
             if (messageEncoderFactory == null)
             {
-                throw new ArgumentNullException(nameof(messageEncoderFactory));
+                throw new ArgumentNullException("messageEncoderFactory");
             }
 
             this.loggingEncoder = new LoggingMessageEncoder(messageEncoderFactory.Encoder);
@@ -144,7 +145,7 @@ namespace TheService
         private MessageEncodingBindingElement innerBindingElement;
 
         public LoggingMessageEncodingBindingElement()
-            : this(new TextMessageEncodingBindingElement(MessageVersion.Soap12, System.Text.Encoding.UTF8))
+            : this(new TextMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8))
         {
         }
 
@@ -190,7 +191,9 @@ namespace TheService
         public override IChannelFactory<TChannel> BuildChannelFactory<TChannel>(BindingContext context)
         {
             if (context == null)
+            {
                 throw new ArgumentNullException("context");
+            }
 
             context.BindingParameters.Add(this);
             return context.BuildInnerChannelFactory<TChannel>();
@@ -199,7 +202,9 @@ namespace TheService
         public override IChannelListener<TChannel> BuildChannelListener<TChannel>(BindingContext context)
         {
             if (context == null)
+            {
                 throw new ArgumentNullException("context");
+            }
 
             context.BindingParameters.Add(this);
             return context.BuildInnerChannelListener<TChannel>();
@@ -208,7 +213,9 @@ namespace TheService
         public override bool CanBuildChannelListener<TChannel>(BindingContext context)
         {
             if (context == null)
+            {
                 throw new ArgumentNullException("context");
+            }
 
             context.BindingParameters.Add(this);
             return context.CanBuildInnerChannelListener<TChannel>();
@@ -240,7 +247,7 @@ namespace TheService
                 switch (this.InnerMessageEncoding)
                 {
                     case "textMessageEncoding":
-                        binding.InnerMessageEncodingBindingElement = new TextMessageEncodingBindingElement(MessageVersion.Soap12, System.Text.Encoding.UTF8);
+                        binding.InnerMessageEncodingBindingElement = new TextMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8);
                         break;
                     case "binaryMessageEncoding":
                         binding.InnerMessageEncodingBindingElement = new BinaryMessageEncodingBindingElement();

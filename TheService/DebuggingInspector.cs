@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
-using System.ServiceModel.Dispatcher;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Schema;
-
-namespace TheService
+﻿namespace TheService
 {
+    using System;
+    using System.IO;
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
+    using System.ServiceModel.Configuration;
+    using System.ServiceModel.Description;
+    using System.ServiceModel.Dispatcher;
+    using System.Text;
+    using System.Xml;
+
     public sealed class DebuggingInspector : IDispatchMessageInspector, IEndpointBehavior
     {
         public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
@@ -85,7 +80,7 @@ namespace TheService
 
         private static string GetLogFilePath()
         {
-            return System.IO.Path.Combine("Z:\\Logs", "inspector-" + Guid.NewGuid().ToString("N") + ".xml");
+            return Path.Combine("Z:\\Logs", "inspector-" + Guid.NewGuid().ToString("N") + ".xml");
         }
 
         public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
@@ -106,6 +101,8 @@ namespace TheService
         }
     }
 
+    // ×××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××
+
     public sealed class DebuggingInspectorBehaviorExtensionElement : BehaviorExtensionElement
     {
         protected override object CreateBehavior()
@@ -115,10 +112,7 @@ namespace TheService
 
         public override Type BehaviorType
         {
-            get
-            {
-                return typeof(DebuggingInspector);
-            }
+            get { return typeof(DebuggingInspector); }
         }
     }
 }
